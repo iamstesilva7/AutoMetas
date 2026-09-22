@@ -1,0 +1,14 @@
+AUTOMETA - AUTOMATIZAÇÃO DE METAS COBASI
+
+1. Olá! Seja bem-vindo(a)!
+2. Deixe o Outlook clássico aberto.
+3. Clique duas vezes em INICIAR
+4. NAO abra index1.html diretamente.
+5. O navegador deve abrir em http://127.0.0.1:5055
+6. No terminal deve aparecer BUILD: OUTLOOK-5055-20260828-1907
+7. Quando o painel carregar, o terminal deve imprimir linhas como:
+   [BUILD OUTLOOK-5055-20260828-1907] GET /
+   [BUILD OUTLOOK-5055-20260828-1907] GET /app.js
+   [BUILD OUTLOOK-5055-20260828-1907] GET /api/usuario-outlook
+
+Se essas linhas não aparecerem, o navegador não esta usando este servidor.

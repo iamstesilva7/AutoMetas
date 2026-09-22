@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metas Lojas</title>
+  <style>
+    :root{
+      --navy:#07142b;
+      --navy-2:#0b1c38;
+      --blue:#1457d9;
+      --blue-2:#2563eb;
+      --blue-soft:#edf3ff;
+      --text:#172033;
+      --muted:#7c8798;
+      --line:#e8edf4;
+      --bg:#f5f7fb;
+      --green:#21a366;
+      --green-soft:#eaf8f0;
+      --red:#dc4c4c;
+      --white:#fff;
+      --shadow:0 5px 18px rgba(18,36,65,.055);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      font-size:12px;
+    }
+    button,input{font:inherit}
+    button{cursor:pointer}
+
+    .layout{min-height:100vh;display:flex}
+
+    /* SIDEBAR */
+    .sidebar{
+      position:fixed;
+      inset:0 auto 0 0;
+      width:220px;
+      background:linear-gradient(180deg,#07152d 0%,#061127 100%);
+      color:#fff;
+      display:flex;
+      flex-direction:column;
+      padding:18px 11px 12px;
+    }
+
+    .brand{
+      height:54px;
+      display:flex;
+      align-items:center;
+      gap:9px;
+      padding:0 8px 14px;
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+
+    .brand-logo{
+      width:31px;height:31px;
+      display:grid;place-items:center;
+      color:#4d8cff;
+      font-size:22px;
+      transform:rotate(-5deg);
+    }
+
+    .brand-name{
+      font-weight:800;
+      letter-spacing:.4px;
+      font-size:16px;
+      line-height:1;
+    }
+    .brand-name span{color:#2d6df3}
+    .brand-sub{
+      display:block;
+      margin-top:3px;
+      font-size:6.5px;
+      letter-spacing:.45px;
+      color:#91a0b8;
+      font-weight:700;
+    }
+
+    .nav{padding-top:23px;flex:1}
+    .nav a{
+      height:38px;
+      display:flex;
+      align-items:center;
+      gap:11px;
+      padding:0 11px;
+      color:#9ba9be;
+      text-decoration:none;
+      border-radius:6px;
+      font-size:9px;
+      font-weight:600;
+      margin-bottom:4px;
+    }
+    .nav a:hover{background:rgba(255,255,255,.05);color:#fff}
+    .nav a.active{
+      color:#fff;
+      background:#1046b7;
+      box-shadow:0 6px 16px rgba(10,64,176,.18);
+    }
+    .nav-icon{
+      width:14px;height:14px;
+      display:grid;place-items:center;
+      font-size:12px;
+      opacity:.95;
+    }
+
+    .scheduled{
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:8px;
+      padding:12px 10px;
+      margin:7px 0 12px;
+      background:rgba(255,255,255,.018);
+    }
+    .scheduled .tiny{
+      color:#9eabc0;font-size:7px;text-align:center;
+    }
+    .scheduled .date{
+      color:#fff;text-align:center;
+      font-weight:800;font-size:9px;margin:8px 0 3px;
+    }
+    .scheduled .time{
+      color:#7f8fa9;text-align:center;font-size:7px;
+    }
+    .scheduled button{
+      width:100%;height:25px;margin-top:9px;
+      background:transparent;color:#fff;border:1px solid #28446f;
+      border-radius:5px;font-size:7px;
+    }
+
+    .support{
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:8px;
+      padding:11px 10px;
+    }
+    .support strong{font-size:8px}
+    .support p{font-size:7px;color:#8b9ab1;line-height:1.5;margin:6px 0 9px}
+    .support button{
+      width:100%;height:25px;
+      color:#fff;background:transparent;
+      border:1px solid #28446f;border-radius:5px;font-size:7px;
+    }
+
+    /* MAIN */
+    .main{
+      width:calc(100% - 220px);
+      margin-left:220px;
+      min-height:100vh;
+    }
+
+    .topbar{
+      height:59px;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      padding:0 28px;
+      gap:19px;
+    }
+    .bell{position:relative;font-size:16px;color:#687589}
+    .bell::after{
+      content:"";
+      width:5px;height:5px;border-radius:50%;
+      background:#1c62df;
+      position:absolute;right:-1px;top:0;
+    }
+    .profile{
+      display:flex;align-items:center;gap:8px;
+      padding-left:3px;
+    }
+    .profile-avatar{
+      width:27px;height:27px;border-radius:50%;
+      background:#f0f4fa;border:1px solid #d9e0ea;
+      display:grid;place-items:center;font-size:13px;color:#65748a;
+    }
+    .profile-text strong{display:block;font-size:7px}
+    .profile-text span{display:block;font-size:6.5px;color:#8591a3;margin-top:2px}
+    .chevron{color:#8290a2;font-size:9px}
+
+    .content{
+      padding:25px 28px 20px;
+      max-width:1280px;
+    }
+
+    .welcome{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-bottom:21px;
+    }
+    .welcome h1{
+      margin:0;
+      font-size:17px;
+      letter-spacing:-.25px;
+    }
+    .welcome p{
+      margin:5px 0 0;
+      color:#8993a2;
+      font-size:8px;
+    }
+    .new-btn{
+      height:34px;padding:0 14px;
+      border:0;border-radius:6px;
+      background:#0e3e99;color:#fff;
+      font-size:8px;font-weight:700;
+      box-shadow:0 6px 14px rgba(13,64,160,.16);
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .card{
+      background:#fff;border:1px solid var(--line);
+      border-radius:7px;padding:13px 14px;
+      min-height:86px;
+      box-shadow:var(--shadow);
+    }
+    .card-head{display:flex;justify-content:space-between;align-items:flex-start}
+    .card-icon{
+      width:29px;height:29px;border-radius:7px;
+      background:#edf3ff;color:#174db6;
+      display:grid;place-items:center;font-size:13px;
+    }
+    .card-icon.green{background:#ebf8f0;color:#25a267}
+    .card-icon.mail{background:#edf2ff;color:#3d61a8}
+    .card-title{font-size:7.5px;color:#707d90;margin-top:1px}
+    .card-value{font-size:18px;font-weight:800;margin-top:6px;letter-spacing:-.4px}
+    .card-note{font-size:6.5px;color:#98a1af;margin-top:2px}
+
+    .two-col{
+      display:grid;
+      grid-template-columns:1.02fr .98fr;
+      gap:13px;
+      margin-bottom:13px;
+    }
+
+    .panel{
+      background:#fff;border:1px solid var(--line);
+      border-radius:7px;box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .panel-head{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:14px 14px 10px;
+    }
+    .panel-head h2{
+      margin:0;font-size:10px;font-weight:800;
+    }
+    .panel-head p{
+      margin:4px 0 0;color:#98a1af;font-size:7px;
+    }
+    .panel-link{
+      color:#1556c8;text-decoration:none;font-size:7px;font-weight:700;
+    }
+
+    .drop-area{
+      margin:0 14px;
+      height:94px;
+      border-radius:5px;
+      background:linear-gradient(145deg,#061126,#0b1c38);
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      border:1px solid #122a4f;
+    }
+    .file-icon{
+      font-size:25px;color:#3277e9;
+      margin-bottom:5px;
+    }
+    .drop-area strong{color:#fff;font-size:9px}
+    .drop-area span{color:#a0aec2;font-size:7px;margin-top:4px}
+    .drop-area small{color:#71839d;font-size:6px;margin-top:3px}
+    .select-btn{
+      height:23px;padding:0 10px;margin-top:6px;
+      border:0;border-radius:4px;
+      color:#fff;background:#1150c4;font-size:7px;font-weight:700;
+    }
+
+    .file-row{
+      margin:10px 14px 8px;
+      display:flex;align-items:center;gap:7px;
+      padding:5px 7px;
+      border:1px solid #edf0f4;border-radius:5px;
+    }
+    .excel{color:#1b9b5c;font-weight:800;font-size:12px}
+    .file-name{flex:1}
+    .file-name strong{display:block;font-size:7px}
+    .file-name span{display:block;font-size:6px;color:#9aa3b0;margin-top:2px}
+    .file-ok{
+      color:#279b61;background:#eaf8f0;
+      border-radius:4px;padding:3px 5px;font-size:5.5px;font-weight:700;
+    }
+
+    .summary{
+      margin:0 14px 10px;
+      border:1px solid #edf0f4;
+      display:grid;grid-template-columns:repeat(3,1fr);
+      border-radius:4px;overflow:hidden;
+    }
+    .summary div{text-align:center;padding:7px 3px;border-right:1px solid #edf0f4}
+    .summary div:last-child{border:0}
+    .summary span{display:block;font-size:6px;color:#9aa2ae}
+    .summary strong{display:block;font-size:9px;margin-top:4px}
+    .summary .danger{color:#d14b4b}
+
+    .main-send{
+      margin:0 14px 8px;
+      width:calc(100% - 28px);
+      height:27px;border:0;border-radius:5px;
+      color:#fff;background:linear-gradient(90deg,#124dc0,#174fc1);
+      font-size:7px;font-weight:700;
+    }
+    .secure-note{
+      text-align:center;color:#9ba4b0;font-size:5.8px;padding-bottom:10px;
+    }
+
+    .recent-list{padding:0 14px 8px}
+    .recent-item{
+      min-height:35px;
+      border-top:1px solid #f0f2f5;
+      display:flex;align-items:center;gap:8px;
+    }
+    .recent-item:first-child{border-top:0}
+    .check{
+      width:12px;height:12px;border-radius:50%;
+      border:1px solid #68c495;color:#36a86d;
+      display:grid;place-items:center;font-size:7px;
+    }
+    .recent-name{flex:1;font-size:7px;font-weight:600;color:#465368}
+    .recent-date{font-size:6px;color:#8d97a5}
+    .details{
+      height:20px;padding:0 7px;border:1px solid #e4e9ef;
+      background:#fff;border-radius:4px;color:#69778a;font-size:5.8px;
+    }
+
+    .data-panel{padding-bottom:9px}
+    .data-head{
+      padding:12px 14px 8px;
+    }
+    .data-head h2{margin:0;font-size:10px}
+    .data-head p{margin:4px 0 0;color:#98a1af;font-size:7px}
+    table{
+      width:calc(100% - 28px);
+      margin:0 14px;
+      border-collapse:collapse;
+      font-size:7px;
+    }
+    th{
+      text-align:left;
+      color:#8b95a3;
+      font-size:6.5px;
+      font-weight:700;
+      padding:7px 5px;
+      background:#fafbfd;
+      border-top:1px solid #edf0f4;
+      border-bottom:1px solid #edf0f4;
+    }
+    td{
+      padding:7px 5px;
+      color:#4d596b;
+      border-bottom:1px solid #f0f2f5;
+    }
+    td strong{font-weight:700;color:#3d495c}
+    .status{
+      display:inline-block;
+      padding:3px 6px;border-radius:4px;
+      color:#2467c9;background:#edf4ff;
+      font-size:5.8px;font-weight:700;
+    }
+    @media(max-width:900px){
+      .sidebar{width:185px}
+      .main{width:calc(100% - 185px);margin-left:185px}
+      .cards{grid-template-columns:repeat(2,1fr)}
+      .two-col{grid-template-columns:1fr}
+    }
+    @media(max-width:650px){
+      .sidebar{position:static;width:100%;height:auto}
+      .layout{display:block}
+      .main{width:100%;margin:0}
+      .nav{display:none}
+      .scheduled,.support{display:none}
+      .content{padding:18px}
+      .cards{grid-template-columns:1fr}
+      .welcome{align-items:flex-start;gap:15px;flex-direction:column}
+    }
+    .layout{display:flex}
+    .layout.active{display:flex}
+    @media (max-width: 980px){
+      .layout.active{display:block}
+    }
+
+  </style>
+</head>
+
+<body style="overflow:hidden">
+<div class="layout active" id="mainScreen">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">➤</div>
+      <div>
+        <div class="brand-name">METAS <span>COBASI</span></div>
+        <small class="brand-sub">AUTOMAÇÃO DE METAS</small>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="#" class="active"><span class="nav-icon">▣</span>Dashboard</a>
+      <a href="#"><span class="nav-icon">➤</span>Enviar Metas</a>
+      <a href="#"><span class="nav-icon">◷</span>Histórico de Envios</a>
+      <a href="#"><span class="nav-icon">▥</span>Lojas</a>
+      <a href="#"><span class="nav-icon">▤</span>Relatórios</a>
+      <a href="#"><span class="nav-icon">⚙</span>Configurações</a>
+    </nav>
+
+    <div class="scheduled">
+      <div class="tiny">Próximo envio agendado</div>
+      <div style="text-align:center;font-size:24px;color:#3779df;margin:7px 0">▣</div>
+      <div class="date" id="nextScheduledDate">Carregando...</div>
+      <div class="time">Envio automático mensal</div>
+      <button>Ver agendamentos</button>
+    </div>
+
+    <div class="support">
+      <strong>◔ &nbsp;Suporte</strong>
+      <p>Precisa de ajuda?<br>Fale com o suporte</p>
+      <button>Abrir chamado</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="bell">♧</div>
+      <div class="profile">
+        <div class="profile-avatar" id="profileAvatar">♙</div>
+        <div class="profile-text">
+          <strong id="currentUser">Identificando Outlook...</strong>
+          <span id="currentUserEmail">Aguarde...</span>
+        </div>
+        <span class="chevron">⌄</span>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <section class="welcome">
+        <div>
+          <h1 id="welcomeTitle">Carregando usuário do Outlook...</h1>
+          <p>Gerencie e envie metas para suas lojas de forma automática e segura.</p>
+        </div>
+        <button class="new-btn">➤ &nbsp; Novo Envio de Metas</button>
+      </section>
+
+      <section class="cards">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Total de Lojas</div>
+              <div class="card-value" id="totalStores">0</div>
+              <div class="card-note">Lojas encontradas na planilha</div>
+            </div>
+            <div class="card-icon">▣</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Metas Enviadas</div>
+              <div class="card-value" id="sentGoals">0</div>
+              <div class="card-note">Neste processamento</div>
+            </div>
+            <div class="card-icon">◎</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Envios Concluídos</div>
+              <div class="card-value" id="completedSends">0%</div>
+              <div class="card-note">Taxa de sucesso</div>
+            </div>
+            <div class="card-icon green">✓</div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Último Envio</div>
+              <div class="card-value" id="lastSend">—</div>
+              <div class="card-note" id="currentClock">—</div>
+            </div>
+            <div class="card-icon mail">✉</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="two-col">
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Enviar Metas</h2>
+              <p>Faça o upload da planilha com as metas e envie automaticamente para as lojas.</p>
+            </div>
+          </div>
+
+          <div class="drop-area" id="dropArea">
+            <div class="file-icon">▤</div>
+            <strong>Arraste sua planilha aqui</strong>
+            <span>ou clique para selecionar</span>
+            <small>Formatos aceitos: .xlsx, .xls</small>
+            <button class="select-btn" id="selectFile">Selecionar Planilha</button>
+          </div>
+
+          <input type="file" id="fileInput" accept=".xlsx,.xls" hidden>
+
+          <div class="file-row">
+            <div class="excel">▦</div>
+
+            <div class="file-name">
+              <strong>Nenhuma planilha selecionada</strong>
+              <span>Aguardando upload...</span>
+            </div>
+
+            <span class="file-ok">
+                Aguardando
+            </span>
+          </div>
+
+          <div class="summary">
+            <div><span>Lojas encontradas</span><strong id="summaryStores">0</strong></div>
+            <div><span>Metas válidas</span><strong id="summaryValid">0</strong></div>
+            <div><span>Erros encontrados</span><strong class="danger" id="summaryErrors">0</strong></div>
+          </div>
+
+          <button class="main-send" id="sendAll">➤ &nbsp; Enviar Metas para Todas as Lojas</button>
+          <div id="statusMessage" style="margin:6px 14px 4px;min-height:16px;font-size:7px;color:#5d6b7e;text-align:center;"></div>
+          <div class="secure-note">🔒 Cada loja receberá apenas sua própria meta via e-mail.</div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div><h2>Últimos Envios</h2></div>
+            <a class="panel-link" href="#">Ver todos</a>
+          </div>
+
+          <div class="recent-list">
+            <div class="recent-item">
+              <span class="check">✓</span>
+              <span class="recent-name">Loja Exemplo 001</span>
+              <span class="recent-date">01/05/2025 - 08:12</span>
+              <button class="details">Ver detalhes</button>
+            </div>
+            <div class="recent-item">
+              <span class="check">✓</span>
+              <span class="recent-name">Loja Exemplo 002</span>
+              <span class="recent-date">01/05/2025 - 08:12</span>
+              <button class="details">Ver detalhes</button>
+            </div>
+            <div class="recent-item">
+              <span class="check">✓</span>
+              <span class="recent-name">Loja Exemplo 003</span>
+              <span class="recent-date">01/05/2025 - 08:12</span>
+              <button class="details">Ver detalhes</button>
+            </div>
+            <div class="recent-item">
+              <span class="check">✓</span>
+              <span class="recent-name">Loja Exemplo 004</span>
+              <span class="recent-date">01/05/2025 - 08:12</span>
+              <button class="details">Ver detalhes</button>
+            </div>
+            <div class="recent-item">
+              <span class="check">✓</span>
+              <span class="recent-name">Loja Exemplo 005</span>
+              <span class="recent-date">01/05/2025 - 08:12</span>
+              <button class="details">Ver detalhes</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel data-panel">
+
+    <div class="data-head">
+        <h2>Visualização dos Dados</h2>
+        <p>Confira os dados que serão enviados para cada loja.</p>
+    </div>
+
+    <div style="overflow-x:auto; padding-bottom:10px;">
+
+        <table id="storesTable">
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Loja</th>
+                    <th>E-mail</th>
+                    <th>Meta</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td colspan="6" style="text-align:center;color:#98a1af;">
+                        Nenhuma planilha processada.
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+    </div>
+  </main>
+</div>
+
+
+<script src="app.js"></script>
+</body>
+</html>
